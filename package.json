@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "nodemailer": "^6.9.1"
+  },
+  "scripts": {
+    "watch": "node server.js",
+    "start": "nodemon server.js"
+  },
+  "name": "product-manager",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "Kedar Vyas",
+  "license": "ISC",
+  "description": ""
+}
