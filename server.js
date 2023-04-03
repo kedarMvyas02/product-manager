@@ -4,6 +4,7 @@ const dbConnection = require("./config/dbConnection");
 const AppError = require("./middlewares/appError");
 const globalErrorHandler = require("./middlewares/globalErrorHandler");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 dbConnection();
 
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 app.all("*", (req, res, next) => {
   return next(new AppError("This route is not defined in this app"));

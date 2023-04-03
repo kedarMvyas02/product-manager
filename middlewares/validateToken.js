@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
-const AppError = require("../middlewares/appError");
+const AppError = require("./appError");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
 
