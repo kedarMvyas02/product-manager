@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please fill the password field"],
     },
     passwordResetToken: { type: String },
+
+    followers: [{ type: mongoose.Types.ObjectId, unique: true }],
   },
   {
     timestamps: true,
