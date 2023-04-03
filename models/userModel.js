@@ -1,4 +1,3 @@
-const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
@@ -19,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     passwordResetToken: { type: String },
 
-    followers: [{ type: mongoose.Types.ObjectId, unique: true }],
+    followers: [{ type: mongoose.Types.ObjectId }],
   },
   {
     timestamps: true,
