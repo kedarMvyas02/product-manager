@@ -1,6 +1,6 @@
 // this middleware is only for checking if username and password are present or not
 
-const common = () => {
+const common = (req, res, next) => {
   const missingValues = [];
   const { email, password } = req.body;
 
