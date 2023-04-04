@@ -4,6 +4,7 @@ const auth = require("../middlewares/authMiddleware");
 const validateToken = require("../middlewares/validateToken");
 const common = require("../middlewares/commonMiddleware");
 const followUnfollowUser = require("../controllers/followUnfollowUser");
+const getTotal = require("../controllers/getTotal");
 
 const router = express.Router();
 
@@ -24,6 +25,6 @@ router.patch(
 
 router.post("/followuser", validateToken, followUnfollowUser.followUser);
 router.post("/unfollowuser", validateToken, followUnfollowUser.unFollowUser);
-router.get("/mostFollowers", validateToken, followUnfollowUser.mostFollowers);
+router.get("/mostFollowers", validateToken, getTotal.getMostFollowers);
 
 module.exports = router;

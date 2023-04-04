@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const AppError = require("../middlewares/appError");
 const Like = require("../models/likeModel");
 const Dislike = require("../models/dislikeModel");
-const Comment = require("../models/commentModel");
+const User = require("../models/userModel");
 
 const mostLikedProduct = asyncHandler(async (req, res, next) => {
   const kedar = await Like.aggregate([
@@ -96,7 +96,35 @@ const mostDislikedProduct = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { mostLikedProduct, mostDislikedProduct };
+const getMostFollowers = asyncHandler(async (req, res, next) => {
+  const mostFollowed = await User.aggregate([
+    // Match products that have at least one followers
+    { $match: { followers: { $exists: true, $ne: [] } } },
+    // Group products by their _id and count the number of likes
+    {
+      $group: {
+        _id: "$_id",
+        totalFollowers: { $sum: { $size: "$followers" } },
+        name: { $first: "$username" },
+        email: { $first: "$email" },
+      },
+    },
+    // Sort the products in descending order by their totalFollowers
+    { $sort: { totalFollowers: -1 } },
+    // Limit the results to the topmost product
+    { $limit: 1 },
+  ]).exec();
+
+  if (mostFollowed) {
+    return res.json({
+      mostFollowed,
+    });
+  } else {
+    return next(new AppError("Something went wrong", 500));
+  }
+});
+
+module.exports = { mostLikedProduct, mostDislikedProduct, getMostFollowers };
 
 /*
  await Like.aggregate([

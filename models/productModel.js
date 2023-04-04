@@ -28,19 +28,6 @@ const productSchema = new mongoose.Schema(
       ref: "ProductTypee",
       required: true,
     },
-    isLiked: {
-      type: Array,
-      default: [],
-    },
-    isDisliked: {
-      type: Array,
-      default: [],
-    },
-    comment: [
-      {
-        commentByUser: { type: String },
-      },
-    ],
   },
   {
     timestamps: true,
