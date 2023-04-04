@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
 const AppError = require("../middlewares/appError");
+const Like = require("../models/likeModel");
+const Dislike = require("../models/dislikeModel");
 
 const like = asyncHandler(async (req, res, next) => {
   const name = req.body.name;
@@ -9,26 +11,25 @@ const like = asyncHandler(async (req, res, next) => {
     return next(new AppError("Product does not exists", 403));
   }
 
-  if (await product.isLiked.includes(req.user.id)) {
-    return next(new AppError("You have already liked the product", 400));
-  }
-
-  await product.updateOne({
-    $push: {
-      isLiked: req.user.id,
-    },
+  await Dislike.findOneAndDelete({
+    user_id: req.user.id,
+    product_id: product.id,
   });
 
-  if (await product.isDisliked.includes(req.user.id)) {
-    await product.updateOne({
-      $pull: {
-        isDisliked: req.user.id,
-      },
+  const existingLike = await Like.findOne({
+    user_id: req.user.id,
+    product_id: product.id,
+  });
+  if (existingLike) {
+    return res.status(400).json({
+      msg: "You have already liked the product",
     });
   }
 
-  const created = await product.save();
-  if (created) {
+  const addLike = new Like({ user_id: req.user.id, product_id: product.id });
+  await addLike.save();
+
+  if (addLike) {
     res.json({
       msg: "U have successfully like the product",
     });
@@ -44,26 +45,28 @@ const disLike = asyncHandler(async (req, res, next) => {
     return next(new AppError("Product does not exists", 403));
   }
 
-  if (await product.isDisliked.includes(req.user.id)) {
-    return next(new AppError("You have already disliked the product", 400));
-  }
-
-  await product.updateOne({
-    $push: {
-      isDisliked: req.user.id,
-    },
+  await Like.findOneAndDelete({
+    user_id: req.user.id,
+    product_id: product.id,
   });
 
-  if (await product.isLiked.includes(req.user.id)) {
-    await product.updateOne({
-      $pull: {
-        isLiked: req.user.id,
-      },
-    });
+  const existingDislike = await Dislike.findOne({
+    user_id: req.user.id,
+    product_id: product.id,
+  });
+  if (existingDislike) {
+    return res
+      .status(400)
+      .json({ message: "Product already disliked by this user" });
   }
 
-  const created = await product.save();
-  if (created) {
+  const addDislike = new Dislike({
+    user_id: req.user.id,
+    product_id: product.id,
+  });
+  await addDislike.save();
+
+  if (addDislike) {
     res.json({
       msg: "U have successfully dislike the product",
     });
